@@ -1,13 +1,14 @@
 //
-//  MainViewController.swift
+//  DetailViewController.swift
 //  PokeDex
 //
 //  Created by t0000-m0112 on 2024-12-30.
 //
 
+
 import UIKit
 
-final class MainViewController: UIViewController {
+final class DetailViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
