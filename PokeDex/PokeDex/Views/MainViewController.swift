@@ -15,6 +15,12 @@ final class MainViewController: UIViewController {
     private let viewModel = MainViewModel()
     private let disposeBag = DisposeBag()
     
+    private let topIconView = UIImageView().then {
+        $0.image = UIImage(named: "topIcon")
+        $0.contentMode = .scaleAspectFit
+        $0.clipsToBounds = true
+    }
+    
     private let collectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout()).then {
         let layout = UICollectionViewFlowLayout()
         layout.minimumLineSpacing = 10
@@ -35,10 +41,17 @@ final class MainViewController: UIViewController {
     private func setupUI() {
         view.backgroundColor = .pdRedMain
         
+        view.addSubview(topIconView)
         view.addSubview(collectionView)
         
+        topIconView.snp.makeConstraints { make in
+            make.bottom.equalTo(view.safeAreaLayoutGuide.snp.top)
+            make.centerX.equalToSuperview()
+            make.height.width.equalTo(48)
+        }
+        
         collectionView.snp.makeConstraints { make in
-            make.edges.equalToSuperview()
+            make.edges.equalTo(view.safeAreaLayoutGuide)
         }
         
         collectionView.delegate = self
@@ -95,12 +108,14 @@ final class MainViewController: UIViewController {
 }
 
 extension MainViewController: UICollectionViewDelegateFlowLayout {
+    
+    // 한 줄에 3개 표시를 기준으로 함
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
         let totalSpacing = 10 * 2 + 10 * 2 // 좌우 섹션 inset + 셀 간 간격
         let width = (collectionView.bounds.width - CGFloat(totalSpacing)) * 0.33 // 화면 너비의 33%
-        return CGSize(width: width, height: width * 1.6) // 원하는 비율 (1.4배 높이)
+        return CGSize(width: width, height: width * 1.6) // 너비와 높이 비율 조정
     }
     
     func collectionView(_ collectionView: UICollectionView,

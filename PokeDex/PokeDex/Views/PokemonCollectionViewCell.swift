@@ -22,7 +22,6 @@ final class PokemonCollectionViewCell: UICollectionViewCell {
         $0.font = UIFont.systemFont(ofSize: 16, weight: .bold)
         $0.textColor = .black
         $0.numberOfLines = 2
-        $0.lineBreakMode = .byWordWrapping
     }
     
     override init(frame: CGRect) {
