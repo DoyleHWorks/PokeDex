@@ -21,6 +21,13 @@ final class MainViewController: UIViewController {
         $0.clipsToBounds = true
     }
     
+    private let topPokemonLabel = UILabel().then {
+        $0.textAlignment = .center
+        $0.font = UIFont.monospacedDigitSystemFont(ofSize: 18, weight: .bold)
+        $0.textColor = .white
+        $0.text = "No. ~"
+    }
+    
     private let collectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout()).then {
         let layout = UICollectionViewFlowLayout()
         layout.minimumLineSpacing = 10
@@ -35,6 +42,7 @@ final class MainViewController: UIViewController {
         setupUI()
         bindViewModel()
         setupInfiniteScroll()
+        setupTopPokemonObserver()
         viewModel.fetchPokemons()
     }
     
@@ -42,12 +50,19 @@ final class MainViewController: UIViewController {
         view.backgroundColor = .pdRedMain
         
         view.addSubview(topIconView)
+        view.addSubview(topPokemonLabel)
         view.addSubview(collectionView)
         
         topIconView.snp.makeConstraints { make in
             make.bottom.equalTo(view.safeAreaLayoutGuide.snp.top)
             make.centerX.equalToSuperview()
             make.height.width.equalTo(48)
+        }
+        
+        topPokemonLabel.snp.makeConstraints { make in
+            make.bottom.equalTo(view.safeAreaLayoutGuide.snp.top)
+            make.leading.equalTo(topIconView.snp.trailing).offset(5)
+            make.height.equalTo(32)
         }
         
         collectionView.snp.makeConstraints { make in
@@ -99,17 +114,42 @@ final class MainViewController: UIViewController {
                 let frameHeight = self.collectionView.frame.size.height
                 let yOffset = offset.y
                 
-                if yOffset > contentHeight - frameHeight - 300 { // 마지막 300pt에서 추가 로드
+                if yOffset > contentHeight - frameHeight - 600 { // 마지막 600pt에서 추가 로드
+                    guard !self.viewModel.isLoading.value else { return }
                     self.viewModel.fetchPokemons()
                 }
             })
             .disposed(by: disposeBag)
     }
+    
+    private func setupTopPokemonObserver() {
+        collectionView.rx.contentOffset
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] _ in
+                self?.updateTopPokemonLabel()
+            })
+            .disposed(by:disposeBag)
+    }
+    
+    private func updateTopPokemonLabel() {
+        guard let firstVisibleIndexPath = collectionView.indexPathsForVisibleItems.sorted(by: { $0.row < $1.row }).first else {
+            topPokemonLabel.text = "No.1~"
+            return
+        }
+        
+        let pokemon = viewModel.pokemonItems.value[firstVisibleIndexPath.row]
+        if let id = pokemon.id {
+            topPokemonLabel.text = "No.\(id)~"
+        } else {
+            topPokemonLabel.text = "No.Unknown~"
+        }
+        
+    }
 }
 
 extension MainViewController: UICollectionViewDelegateFlowLayout {
     
-    // 한 줄에 3개 표시를 기준으로 함
+    // 한 줄에 3개 표시
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
