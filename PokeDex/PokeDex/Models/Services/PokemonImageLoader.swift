@@ -18,7 +18,7 @@ final class PokemonImageLoader {
         DispatchQueue.main.async {
             imageView.kf.setImage(
                 with: imageURL,
-                placeholder: UIImage(named: "placeholder"),
+                placeholder: UIImage(),
                 options: [
                     .transition(.fade(0.3)),
                     .cacheOriginalImage
