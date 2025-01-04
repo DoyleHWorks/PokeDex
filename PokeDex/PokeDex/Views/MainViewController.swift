@@ -43,6 +43,7 @@ final class MainViewController: UIViewController {
         bindViewModel()
         setupInfiniteScroll()
         setupTopPokemonObserver()
+        setupCellTapHandler()
         viewModel.fetchPokemons()
     }
     
@@ -143,7 +144,20 @@ final class MainViewController: UIViewController {
         } else {
             topPokemonLabel.text = "No.Unknown~"
         }
-        
+    }
+    
+    private func setupCellTapHandler() {
+        collectionView.rx.modelSelected(PokemonListItem.self)
+            .subscribe(onNext: { [weak self] pokemon in
+                self?.navigateToDetailView(with: pokemon)
+            })
+            .disposed(by: disposeBag)
+    }
+    
+    private func navigateToDetailView(with pokemon: PokemonListItem) {
+        let detailVC = DetailViewController()
+        detailVC.pokemonID = pokemon.id
+        navigationController?.pushViewController(detailVC, animated: true)
     }
 }
 

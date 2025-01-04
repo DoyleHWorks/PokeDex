@@ -16,7 +16,6 @@ struct PokemonDetail: Decodable {
 }
 
 struct PokemonType: Decodable {
-    let slot: Int
     let type: TypeInfo
 }
 
