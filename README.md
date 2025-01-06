@@ -1,6 +1,6 @@
 # 📱 PokeDex
 
-내일배움캠프 iOS 5기 앱개발 심화 주차 개인 과제
+The **PokeDex App Project** is an application that utilizes Pokémon data, allowing users to explore a list of Pokémon and view detailed information. Built on the RxSwift framework and the MVVM pattern, the app efficiently manages asynchronous data processing with simplicity and effectiveness. Users can browse information such as Pokémon names, images, types, height, weight, and more, with easy access via infinite scrolling and a detailed view.
 
 ## 📚 Tech Stacks
 
@@ -75,7 +75,25 @@ PokeDex
 
 ## 📐 Key Features
 
-## ✨ Considerations
+- **Explore Pokémon List**:  
+  - Fetch Pokémon data from the API and display it in a list format.  
+  - Infinite scroll functionality for continuous Pokémon exploration.  
+
+- **View Pokémon Details**:  
+  - Provides detailed information such as name, image, type, height, weight, and more.  
+  - Displays data in a user-friendly format.  
+
+- **Fast Data Loading**:  
+  - Utilizes RxSwift for asynchronous data loading and seamless UI updates.  
+  - Implements Kingfisher for image caching and rapid loading speeds.  
+
+- **Error Handling**:  
+  - Displays appropriate error messages to users when API calls fail.  
+  - Handles network connectivity issues and data decoding errors effectively.  
+
+- **Responsive User Experience**:  
+  - Shows the current Pokémon number at the top of the screen based on the scroll position.  
+  - Smooth transitions to `DetailViewController` upon cell selection.  
 
 ## 📦 How to Install  
 1. Clone this repository:  
